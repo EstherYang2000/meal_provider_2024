@@ -13,6 +13,12 @@ docker -p 5000:5000 backend_image --name backend_api
 cd backend
 pip install -r requirements.txt
 ```
+
+### Connect to K8s PostgreSQL
+```shell
+kubectl port-forward pods/citus-coordinator-0 5432:5432
+```
+
 ### Run Flask server
 ```shell
 cd backend/app
