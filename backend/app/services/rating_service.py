@@ -3,6 +3,8 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 def get_rating_service(data):
     # data = {"item_id": 'item001'}
 
@@ -56,7 +58,10 @@ def update_rating_service(data):
         current_time = datetime.now(timezone.utc)
         formatted_date = current_time.strftime('%a, %d %b %Y %H:%M:%S GMT')
 
-        cursor.execute("INSERT INTO meals_ratings (user_id, item_id, star_rating, created_at, updated_at) VALUES(%s, %s, %s, %s, %s)", (user_id, item_id, rating, formatted_date, formatted_date))
+        cursor.execute('''INSERT INTO 
+                        meals_ratings (user_id, item_id, star_rating, created_at, updated_at)
+                        VALUES(%s, %s, %s, %s, %s)''',
+                        (user_id, item_id, rating, formatted_date, formatted_date))
 
         cursor.close()
         conn.close()

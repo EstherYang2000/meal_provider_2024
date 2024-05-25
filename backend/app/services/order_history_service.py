@@ -22,12 +22,23 @@ def get_order_history_service(data):
         end_date = datetime.strptime(data['end_date'], "%Y-%m-%d").strftime('%a, %d %b %Y %H:%M:%S GMT')
         customer_id = data['customer_id']
 
-        cursor.execute("SELECT orders.user_id, orders.order_date, orders.total_price FROM orders WHERE orders.customer_id = %s AND orders.order_date BETWEEN %s AND %s", (customer_id, start_date, end_date))
+        cursor.execute('''SELECT 
+                       orders.user_id, 
+                       orders.order_date,
+                       orders.total_price FROM 
+                       orders WHERE 
+                       orders.customer_id = %s AND 
+                       orders.order_date BETWEEN %s AND %s''', (customer_id, start_date, end_date))
         orders = cursor.fetchall()
 
         order_history = []
         for order_id, order_date, total_price in orders:
-            cursor.execute("SELECT item_id, quantity, unit_price FROM orders_items WHERE order_id = %s", order_id)
+            cursor.execute('''SELECT 
+                           item_id, 
+                           quantity, 
+                           unit_price FROM 
+                           orders_items WHERE 
+                           order_id = %s''', order_id)
             items = cursor.fetchall()
             item_list = []
             for item_id, quantity, unit_price in items:
@@ -52,7 +63,8 @@ def get_order_history_service(data):
     except Exception as e:
         return ({"error": str(e)}), 500
 
-def test():
+def test(data1):
+
     host = os.getenv("DB_HOST")
     dbname = os.getenv("DB_NAME")
     user = os.getenv("DB_USER")
@@ -69,7 +81,7 @@ def test():
         data = cursor.fetchall()
         cursor.close()
         conn.close()
-        return ({"data": data})
+        return ({"data": data, "request": data1})
     except Exception as e:
         return ({"error": str(e)}), 500
 

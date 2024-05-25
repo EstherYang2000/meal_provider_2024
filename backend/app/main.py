@@ -40,7 +40,7 @@ def payment():
 # test
 @app.route('/api/test', methods=['GET'])
 def test():
-    data = order_history_service.test()#
+    data = order_history_service.test(request.get_json())
     return jsonify(data)
 
 if __name__ == '__main__':
